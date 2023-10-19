@@ -5,10 +5,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct 
 {
-    char produto[100];
+    char produto[50];
     float preco;
 
 }desafio;
@@ -24,6 +25,7 @@ typedef struct
 
 int main()
 {
+    FILE * arquivo;
     int op;
     int tamanho;
     int x = 0;
@@ -34,13 +36,15 @@ int main()
     int qtd = 0;
     float soma[5];
     float total;
+    float dinheiro = 0;
+    float troco = 0;
 
-    FILE * arquivo;
+    
 
     printf("\nQuantos materias diferentes a empresa fornece? ");
     scanf("\n%d", &tamanho);
 
-    arquivo = fopen("notafiscal.txt", "a");
+    
 
     desafio * cadastrar = malloc(tamanho*sizeof(desafio));
 
@@ -51,18 +55,18 @@ int main()
         printf("\n-----2. carrinho--------");
         printf("\n-----3. orçamento-------");
         printf("\n-----4. adicionar novo produto-----");
-        printf("\n-------5. adicionar ao carrinho ------");
-        scanf("\n%d", &op);
+        printf("\n-------5. pagar ------\n");
+        scanf(" %d", &op);
 
         switch (op)
         {
         case 1:
             for (int i = x; i < tamanho; i++)
             {
-                pritf("\nNome do material: ");
-                scanf("%[^\n]", cadastrar[i].produto);
+                printf("\nNome do material: ");
+                scanf(" %[^\n]", cadastrar[i].produto);
                 printf("\nPreço: ");
-                scanf("%[^\n]", cadastrar[i].preco);
+                scanf(" %f", &cadastrar[i].preco);
 
                 x = x + 1;
             }
@@ -72,7 +76,7 @@ int main()
             for (int i = 0; i < tamanho; i++)
             {
                 printf("\n %d - Produto: %s", i, cadastrar[i].produto);
-                printf("\tPreco: %2.f", cadastrar[i].preco);
+                printf("\tPreco: %.2f", cadastrar[i].preco);
             }
             printf("\nQuantos produtos diferentes serao adicionados ao carrinho: ");
             scanf("%d", &quantidade_produtos);
@@ -82,13 +86,13 @@ int main()
             for (int i = y; i < quantidade_produtos; i++)
             {
                 printf("\n Qual o nome produto desejado? ");
-                scanf("%[^\n]", nome);
-                for (int i = 0; i < tamanho; i++)
+                scanf(" %[^\n]", nome);
+                for (int j = 0; j < tamanho; j++)
                 {
-                    if (nome == cadastrar[i].produto)
+                    if (strcmp(nome, cadastrar[j].produto)==0)
                     {
-                        //escolhas[w]->p1 = cadastrar[i].produto;
-                        escolhas[w].valor = cadastrar[i].preco;
+                        strcpy(escolhas[w].p1,cadastrar[j].produto);
+                        escolhas[w].valor = cadastrar[j].preco;
                         w = w + 1;
                     }
                 }
@@ -98,25 +102,54 @@ int main()
             break;
 
         case 3:
+            
+            arquivo = fopen("notafiscal.txt", "a");
             for (int i = 0; i < quantidade_produtos; i++)
             {
                 printf("\nQual a quantidade do %d produto? ", i+1);
                 scanf("%d", &qtd);
                 soma[i] = qtd * escolhas[i].valor;
+                fprintf(arquivo, "\nProduto: %s \t Preco: %.2f \t Quantidade: %d", escolhas[i].p1, escolhas[i].valor, qtd);
+                
             }
             for (int i = 0; i < quantidade_produtos; i++)
             {
-                total = soma[i]++;
+                total = total + soma[i];
             }
             
-            printf("\nO total e: %2.f", total);
             
+
+            fprintf(arquivo, "\nO total e: %.2f", total);
+            
+            fclose(arquivo);
+
             break;
         case 4:
             printf("Quantos itens serao no total? ");
             scanf("%d", &tamanho);
             cadastrar = realloc(cadastrar, tamanho*sizeof(desafio));
+            break;
+
+        case 5:
+            arquivo = fopen("notafiscal.txt", "a+");
+
+            printf("\nO valor total foi de: %.2f", total);
+            printf("\nDinheiro: ");
+            scanf(" %f", &dinheiro);
+            troco = dinheiro - total;
+            fprintf(arquivo, "\tDinheiro: %.2f \tTroco: %.2f", dinheiro, troco);
+            fclose(arquivo);
+
+
+            arquivo = fopen("notafiscal.txt", "r");
+            char * linha = malloc(1000*sizeof(char));
+            while (fgets(linha, sizeof(linha),arquivo) != NULL)
+            {
+                printf(" %s", linha);
+            }
             
+            fclose(arquivo);
+            break;   
         }
     }
 }
