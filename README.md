@@ -1,2 +1,3 @@
 # Desafio-ecomerce
-Ola, este é um desafio proposto de comércio online desenvolvido durante as aulas do Senai em logica de programação!
+Olá, este é um desafio proposto de comércio online desenvolvido durante as aulas do Senai em logica de programação!
+Ele consiste em um programa em C que simule um e-commerce de material de construção. Ou seja, o administrador pode cadastrar novos produtos(requisito: alocando memória para a quantidade necessária). O usuário poderá inserir novos produtos após a primeira inserção. Poderá ser feito um orçamento do valor que será gasto na compra de produtos escolhidos. O usuário poderá efetuar a compra se o valor inserido que foi inserido for suficiente. Caso o valor seja maior, devolva o troco. Após esses processos, imprima uma nota fiscal em um arquivo de texto e permita dentro do programa exibir todas as compras inseridas em um arquivo de texto.
